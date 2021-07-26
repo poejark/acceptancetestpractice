@@ -7,8 +7,11 @@ class MoviesController < ApplicationController
   end
 
   def index
-    
-    if params[:director_filter].nil?
+    if !params[:director_DNE].nil?
+      @movie = Movie.find params[:id]
+      flash[:notice] = "'#{@movie.title}' has no director info"
+      @movies = Movie.all
+    elsif params[:director_filter].nil?
       @movies = Movie.all
     else
       @movies = Movie.filtered_director(params[:director_filter])
@@ -37,8 +40,15 @@ class MoviesController < ApplicationController
   end
   
   def director
+    
     director = params[:director]
-    redirect_to movies_path(:director_filter => director)
+    @movie = Movie.find params[:id]
+
+    if director != "dne"
+      redirect_to movies_path(:director_filter => director)
+    else 
+      redirect_to movies_path(:id => @movie, :director_DNE => "1")
+    end
   end
 
   def destroy
