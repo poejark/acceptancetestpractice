@@ -1,9 +1,13 @@
 class MoviesController < ApplicationController
 
   def show
-    id = params[:id] # retrieve movie ID from URI route
-    @movie = Movie.find(id) # look up movie by unique ID
-    # will render app/views/movies/show.<extension> by default
+    if params[:id] == "director"
+      @movie = Movie.find(1)
+    else
+      id = params[:id] # retrieve movie ID from URI route
+      @movie = Movie.find(id) # look up movie by unique ID
+      # will render app/views/movies/show.<extension> by default
+    end
   end
 
   def index
@@ -43,8 +47,8 @@ class MoviesController < ApplicationController
     
     director = params[:director]
     @movie = Movie.find params[:id]
-
     if director != "dne"
+      
       redirect_to movies_path(:director_filter => director)
     else 
       redirect_to movies_path(:id => @movie, :director_DNE => "1")
